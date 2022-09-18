@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }))
 app.use(cors());
 
 
-const CONNECTION_URL = 'mongodb+srv://Tatul420:Sskvikak420$@cluster0.t9akjsv.mongodb.net/?retryWrites=true&w=majority';
+const CONNECTION_URL = 'mongodb+srv://Tatul420:Sskvikak420@cluster0.t9akjsv.mongodb.net/?retryWrites=true&w=majority';
 const PORT = process.env.PORT || 6006;
 
 mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
