@@ -17,18 +17,26 @@ export const getUser = async (req, res) => {
 }
 
 export const createUser = async (req, res) => {
-
     const { username, email, phone, password, confirmPassword } = req.body;
 
     const newPostMessage = new PostUser({ username, email, phone, password, confirmPassword })
-
     try {
-        await newPostMessage.save();
+        if (password === confirmPassword) {
+            await newPostMessage.save();
+            console.log('Passwords Match');
+            res.status(201).json(newPostMessage);
+        }
+        else console.log('Passwords do not match');
 
-        res.status(201).json(newPostMessage);
-    } catch (error) {
+    }
+    catch (error) {
+        console.error(error)
         res.status(409).json({ message: error.message });
     }
 }
+
+export const deleteUser = async (req, res) => [
+
+]
 
 export default router;

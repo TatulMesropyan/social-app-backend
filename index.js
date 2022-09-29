@@ -20,7 +20,7 @@ app.use(cors());
 // allowing for a JSON-like experience with URL-encoded. 
 
 app.get('/', (req, res) => {
-  req.send('Home Page')
+  res.send('Home Page')
 })
 
 app.use('/posts', postRoutes)
