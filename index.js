@@ -3,7 +3,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import postRoutes from './routes/posts.js'
+import registrationRoutes from './routes/registration.js'
+import loginRoutes from './routes/login.js'
 
 const app = express();
 
@@ -23,7 +24,9 @@ app.get('/', (req, res) => {
   res.send('Home Page')
 })
 
-app.use('/posts', postRoutes)
+app.use('/registration', registrationRoutes)
+
+app.use('/login', loginRoutes)
 
 
 const DB_CONNECTION = 'mongodb+srv://test:test@cluster0.vqcza4p.mongodb.net/test';
