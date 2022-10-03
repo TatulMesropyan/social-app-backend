@@ -8,7 +8,7 @@ export const getUser = async (req, res) => {
     try {
         const postMessages = await RegistrationUser.find();
 
-        res.status(200).json(postMessages);
+        res.json({ status: 'OK' });
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
@@ -30,7 +30,7 @@ export const createUser = async (req, res) => {
 
     try {
         await newPostMessage.save();
-        res.status(201).json(newPostMessage);
+        res.json({ status: 'OK' });
     }
     catch (error) {
         res.status(409).json({ message: error.message });
