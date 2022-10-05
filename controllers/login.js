@@ -1,17 +1,17 @@
 import express from 'express';
 import bcrypt, { compare } from 'bcrypt'
 import Jwt from 'jsonwebtoken';
-import RegistrationUser from '../models/registerUser.js';
+import User from '../models/user.js';
 
 const router = express.Router();
 
 export const getLoginCredentials = async (req, res) => {
     const { username, password } = req.body;
     try {
-        let user = await RegistrationUser.findOne({ username });
+        let user = await User.findOne({ username });
 
         if (!user) {
-            return res.status(400).send({ masg: 'Email exists' });
+            return res.status(400).send({ msg: 'Email exists' });
         }
 
         let isPasswordValid = await bcrypt.compare(password, user.password);

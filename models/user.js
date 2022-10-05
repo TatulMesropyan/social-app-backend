@@ -1,11 +1,23 @@
 import mongoose from 'mongoose'
 import Joi from 'joi';
 
-const registrationUser = mongoose.Schema({
-    username: String,
-    email: String,
-    phone: String,
-    password: String,
+const user = mongoose.Schema({
+    username: {
+        type:String,
+        required: true,
+    },
+    email: {
+        type:String,
+        required: true,
+    },
+    phone: {
+        type:Number,
+        required: true,
+    },
+    password: {
+        type:String,
+        required: true,
+    },
 })
 
 // RegistrationUser.methods.joiValidate = () => {
@@ -16,6 +28,6 @@ const registrationUser = mongoose.Schema({
 //     }
 // }
 
-const RegistrationUser = mongoose.model('RegistrationUser', registrationUser);
+const User = mongoose.model('User', user);
 
-export default RegistrationUser;
+export default User;
