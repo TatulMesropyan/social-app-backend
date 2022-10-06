@@ -1,6 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcrypt'
 import User from '../models/user.js';
+import user from "../models/user.js";
 
 const router = express.Router();
 
@@ -18,23 +19,19 @@ export const getUser = async (req, res) => {
 
 export const createUser = async (req, res) => {
     const { username, email, phone, password, confirmPassword } = req.body;
-
-    if (!(password && email)) {
-        return res.status(400).json({ error: 'Data not formatted properly' });
+    if (!(password && email && phone && username)) {
+        return res.status(402).json({ error: 'Data not formatted properly' });
     }
 
-    const oldUserEmail = await User.find({email});
-    if(oldUserEmail){
-     return res.status(400).json({error: 'Email was already used'})
+    const userExists = await User.findOne({$or:[{username},{email},{phone}]})
+    if(userExists){
+        return res.status(423).json({error:'Credentials already in use'})
     }
 
-    const oldUsername = await User.find({username})
-    if(oldUsername){
-        return res.status(400).json({error:'Username already used'})
-    }
     if(password !== confirmPassword){
         return res.status(400).json({ error: 'Passwords did not match'})
     }
+
     try {
     const newUser = new User({ username, email, phone, password });
 
@@ -44,7 +41,7 @@ export const createUser = async (req, res) => {
 
         await newUser.save();
 
-        res.send.json({ success: 'OK' });
+        res.status(200).json({ success: 'OK' });
     }
     catch (error) {
         return res.status(409).json({ error: error.message });
