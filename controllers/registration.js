@@ -1,9 +1,12 @@
 import express from 'express';
 import bcrypt from 'bcrypt'
 import User from '../models/user.js';
-import user from "../models/user.js";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
 const router = express.Router();
+dotenv.config();
+
 
 export const getUser = async (req, res) => {
     try {
@@ -23,26 +26,31 @@ export const createUser = async (req, res) => {
         return res.status(402).json({ error: 'Data not formatted properly' });
     }
 
-    const userExists = await User.findOne({$or:[{username},{email},{phone}]})
-    if(userExists){
-        return res.status(423).json({error:'Credentials already in use'})
+    if(password !== confirmPassword){
+        return res.status(400).json({ error: 'Passwords did not match'});
     }
 
-    if(password !== confirmPassword){
-        return res.status(400).json({ error: 'Passwords did not match'})
+    const userExists = await User.findOne({$or:[{username},{email},{phone}]})
+    if(userExists){
+        return res.status(423).json({error:'Credentials already in use'});
     }
 
     try {
-    const newUser = new User({ username, email, phone, password });
+    const newUser = new User({
+        username,
+        email:email.toLowerCase(),
+        phone,
+        password });
 
     const salt = await bcrypt.genSalt(10);
 
-        newUser.password = await bcrypt.hash(password, salt)
+        newUser.password = await bcrypt.hash(password, salt);
 
         await newUser.save();
 
         res.status(200).json({ success: 'OK' });
     }
+
     catch (error) {
         return res.status(409).json({ error: error.message });
     }

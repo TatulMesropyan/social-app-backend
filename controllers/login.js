@@ -2,6 +2,7 @@ import express from 'express';
 import bcrypt, { compare } from 'bcrypt'
 import Jwt from 'jsonwebtoken';
 import User from '../models/user.js';
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -17,17 +18,13 @@ export const getLoginCredentials = async (req, res) => {
         let isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (isPasswordValid) {
-            const token = Jwt.sign(
-                {
-                    name: user.name,
-                    email: user.email
-                }
-            )
-            console.log(token)
+            const token = jwt.sign({
+                username:username,
+                password:password,
+            },process.env.JWT_KEY)
             return res.json({ status: 'OK', user: token })
         }
         else return res.status(400).json({ msg: 'Email or password incorrect' });
-
     }
     catch (error) {
         res.status(409).json({ message: error.message });
