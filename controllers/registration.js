@@ -47,7 +47,6 @@ export const createUser = async (req, res) => {
         newUser.password = await bcrypt.hash(password, salt);
 
         await newUser.save();
-
         res.status(200).json({ success: 'OK' });
     }
 
@@ -58,7 +57,12 @@ export const createUser = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
     const { id } = req.params;
-
+    try {
+        if(id)
+        await User.findByIdAndDelete(id)
+    } catch (err) {
+        console.log(err)
+    }
     return res.send();
 };
 

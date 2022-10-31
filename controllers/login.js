@@ -1,18 +1,17 @@
 import express from 'express';
-import bcrypt, { compare } from 'bcrypt'
-import Jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt'
 import User from '../models/user.js';
 import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
-export const getLoginCredentials = async (req, res) => {
+export const loginCredentials = async (req, res) => {
     const { username, password } = req.body;
     try {
         let user = await User.findOne({ username });
 
         if (!user) {
-            return res.status(400).send({ msg: 'Email exists' });
+            return res.status(400).send({ msg: 'Email doesnt exists' });
         }
 
         let isPasswordValid = await bcrypt.compare(password, user.password);
@@ -22,7 +21,7 @@ export const getLoginCredentials = async (req, res) => {
                 username:username,
                 password:password,
             },process.env.JWT_KEY)
-            return res.json({ status: 'OK', user: token })
+            return res.json({ status: 'OK', token: token, user: user })
         }
         else return res.status(400).json({ msg: 'Email or password incorrect' });
     }
