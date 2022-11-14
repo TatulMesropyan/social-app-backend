@@ -5,6 +5,7 @@ export const authenticateToken = (req, res, next) => {
     // TODO middleware to return back user id too
 
     const authHeader = req.headers['authorization']
+
     const token = authHeader && authHeader.split(' ')[1]
 
     if (token == null) return res.sendStatus(401)
@@ -15,8 +16,9 @@ export const authenticateToken = (req, res, next) => {
             console.log(err)
             return res.sendStatus(403)
         }
-        req.user = user
-        console.log(user)
+        else {
+            req.user = user
+        }
 
         next()
     })
