@@ -31,7 +31,6 @@ export const deletePost = async (req, res) => {
 }
 
 export const getMyPosts = async (req, res) => {
-    console.log(req)
     const filters = req.query;
     const result = await Post.find({ userId: req.user.id, title: filters.title });
     if (!result || result?.length < 1) {
