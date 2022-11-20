@@ -62,7 +62,7 @@ export const deleteUser = async (req, res) => {
         if (id)
             await User.findByIdAndDelete(id)
     } catch (err) {
-        res.status(400).json({status: err.message})
+        res.status(400).json({ status: err.message })
     }
     return res.send();
 };

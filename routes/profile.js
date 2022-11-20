@@ -11,7 +11,7 @@ routes.get('/:id/posts', getUserPosts)
 routes.post('/', createNewPost)
 routes.delete('/:id', deletePost)
 routes.post('/:id/changepassword', changePassword)
-routes.post('/:id/changeusername',changeUserName)
+routes.post('/:id/changeusername', changeUserName)
 
 
 export default routes;
