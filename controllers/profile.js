@@ -23,7 +23,9 @@ export const createNewPost = async (req, res) => {
 
 export const deletePost = async (req, res) => {
     const { id } = req.params;
+
     const post = await Post.findByIdAndDelete(id);
+
     if (post) {
         res.status(200).json({ status: "Post deleted" });
     }
@@ -41,7 +43,7 @@ export const getMyPosts = async (req, res) => {
 export const getUserPosts = async (req, res) => {
     const { id } = req.params;
     const userPosts = await Post.find({ userId: id })
-    if (!userPosts || userPosts.length < 1) {
+    if (!userPosts || userPosts?.length < 1) {
         return res.status(400).json({ status: "Posts not found" });
     }
     return res.status(200).json({ status: "Posts found", posts: userPosts });
@@ -49,20 +51,18 @@ export const getUserPosts = async (req, res) => {
 
 export const changePassword = async (req, res) => {
     const { id } = req.params;
-    const { oldPassword, newPassword, confirmNewPassword } = req.body;
+    const { currentPassword, newPassword, confirmationPassword } = req.body;
     try {
         const user = await User.findById(id)
-        let isOldPasswordValid = await bcrypt.compare(oldPassword, user.password);
-        if (isOldPasswordValid) {
-            if (newPassword === confirmNewPassword) {
-                const salt = await bcrypt.genSalt(10);
-                await User.findByIdAndUpdate({ id: id, password: await bcrypt.hash(newPassword, salt) });
-            }
-            else res.status(400).json({ status: "Password and confirmation password missmatch" });
+        let isOldPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        if (isOldPasswordValid && newPassword === confirmationPassword) {
+                let salt = await bcrypt.genSalt(10);
+                await User.findByIdAndUpdate(id,{password:await bcrypt.hash(newPassword,salt)});
+                res.status(200).json({ status: "Password changed succesfully" });
         }
-        else res.status(400).json({ status: "Old password was wrong" });
+        else res.status(400).json({ status: "Wrong data entered" });
     } catch (err) {
-        res.status(400).json({ status: err });
+       console.log(err);
     }
 };
 
