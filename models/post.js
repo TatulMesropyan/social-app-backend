@@ -15,7 +15,17 @@ const post = mongoose.Schema({
     userId: {
         type: String,
         required: true,
-    }
+    },
+//    likes:{
+//        qunatity:{
+//            type: Number,
+//            required: true,
+//            default: 0,
+//        },
+//        likedUsers:{
+//            type: Array,
+//        }
+//    }
 });
 
 const Post = mongoose.model('Post', post)
