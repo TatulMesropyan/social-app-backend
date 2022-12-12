@@ -49,6 +49,16 @@ export const getUserPosts = async (req, res) => {
     return res.status(200).json({ status: "Posts found", posts: userPosts });
 };
 
+export const getSinglePost = async (req, res) => {
+    const {id, postId} = req.params;
+    try {
+    const exactPost = await Post.findOne({_id: postId,userId: id})
+    return res.status(200).json({status:"Post found", post: exactPost})
+    } catch(e){
+        return res.status(400).json({status: "Post not found"})
+    }
+};
+
 export const changePassword = async (req, res) => {
     const { id } = req.params;
     const { currentPassword, newPassword, confirmationPassword } = req.body;
@@ -58,7 +68,7 @@ export const changePassword = async (req, res) => {
         if (isOldPasswordValid && newPassword === confirmationPassword) {
                 let salt = await bcrypt.genSalt(10);
                 await User.findByIdAndUpdate(id,{password:await bcrypt.hash(newPassword,salt)});
-                res.status(200).json({ status: "Password changed succesfully" });
+                res.status(200).json({ status: "Password changed successfully" });
         }
         else res.status(400).json({ status: "Wrong data entered" });
     } catch (err) {
@@ -77,5 +87,9 @@ export const changeUserName = async (req, res) => {
     }
     else res.status(400).json({ status: "Username was already in use" });
 };
+
+//export const likePost = async (req, res) => {
+//
+//};
 
 export default router;
