@@ -1,16 +1,19 @@
-import express from 'express';
+import express from "express";
 import bodyParser from "body-parser";
-import { getUser, createUser, deleteUser } from '../controllers/registration.js';
+import {
+  getUser,
+  createUser,
+  deleteUser,
+} from "../controllers/registration.js";
 
 const router = express.Router();
 
-router.use(bodyParser.json())
+router.use(bodyParser.json());
 
-router.get('/', getUser)
+router.get("/", getUser);
 
-router.post('/', createUser)
+router.post("/", createUser);
 
-router.delete('/', deleteUser)
-
+router.delete("/", deleteUser);
 
 export default router;
