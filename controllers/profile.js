@@ -1,9 +1,9 @@
-import express from "express";
-import bcrypt from "bcrypt";
+import express from 'express';
+import bcrypt from 'bcrypt';
 
-import Post from "../models/post.js";
-import User from "../models/user.js";
-import Likes from "../models/likes.js";
+import Post from '../models/post.js';
+import User from '../models/user.js';
+import Likes from '../models/likes.js';
 
 const router = express.Router();
 
@@ -22,9 +22,9 @@ export const createNewPost = async (req, res) => {
     await newPost.save();
     await newLike.save();
   } catch (e) {
-    return res.status(400).json({ status: "Something went wrong" });
+    return res.status(400).json({ status: 'Something went wrong' });
   }
-  return res.status(200).json({ status: "New post created" });
+  return res.status(200).json({ status: 'New post created' });
 };
 
 export const deletePost = async (req, res) => {
@@ -33,15 +33,15 @@ export const deletePost = async (req, res) => {
   const post = await Post.findByIdAndDelete(id);
 
   if (post) {
-    res.status(200).json({ status: "Post deleted" });
-  } else return res.status(400, "Post doesnt exist");
+    res.status(200).json({ status: 'Post deleted' });
+  } else return res.status(400, 'Post doesnt exist');
 };
 
 export const getMyPosts = async (req, res) => {
   const filters = req.query;
   const result = await Post.find({ userId: req.user.id, title: filters.title });
   if (!result || result?.length < 1) {
-    return res.status(400).json({ status: "No posts found" });
+    return res.status(400).json({ status: 'No posts found' });
   }
 };
 
@@ -49,18 +49,18 @@ export const getUserPosts = async (req, res) => {
   const { id } = req.params;
   const userPosts = await Post.find({ userId: id });
   if (!userPosts || userPosts?.length < 1) {
-    return res.status(400).json({ status: "Posts not found" });
+    return res.status(400).json({ status: 'Posts not found' });
   }
-  return res.status(200).json({ status: "Posts found", posts: userPosts });
+  return res.status(200).json({ status: 'Posts found', posts: userPosts });
 };
 
 export const getSinglePost = async (req, res) => {
   const { id, postId } = req.params;
   try {
     const exactPost = await Post.findOne({ _id: postId, userId: id });
-    return res.status(200).json({ status: "Post found", post: exactPost });
+    return res.status(200).json({ status: 'Post found', post: exactPost });
   } catch (e) {
-    return res.status(400).json({ status: "Post not found" });
+    return res.status(400).json({ status: 'Post not found' });
   }
 };
 
@@ -78,8 +78,8 @@ export const changePassword = async (req, res) => {
       await User.findByIdAndUpdate(id, {
         password: await bcrypt.hash(newPassword, salt),
       });
-      res.status(200).json({ status: "Password changed successfully" });
-    } else res.status(400).json({ status: "Wrong data entered" });
+      res.status(200).json({ status: 'Password changed successfully' });
+    } else res.status(400).json({ status: 'Wrong data entered' });
   } catch (err) {
     console.log(err);
   }
@@ -94,28 +94,26 @@ export const changeUserName = async (req, res) => {
   });
   if (isUserNameUsed) {
     await User.findOneAndUpdate({ oldUserName, username: newUserName });
-    res.status(200).json({ status: "Status changed successfully" });
-  } else res.status(400).json({ status: "Username was already in use" });
+    res.status(200).json({ status: 'Status changed successfully' });
+  } else res.status(400).json({ status: 'Username was already in use' });
 };
 
 export const likePost = async (req, res) => {
   const { id, postId } = req.params;
   let user = await User.findById(id);
   let likedPost = await Likes.findOne({ postId: postId });
-  console.log("1", likedPost);
   if (likedPost && user) {
-    if (likedPost.likedUsers.forEach((item, index) => item["_id"] !== id)) {
-      await likedPost.quantity++;
+    if (likedPost.likedUsers.filter((item) => item['_id'] !== id).length <= 0) {
+      likedPost.quantity++;
       await likedPost.likedUsers.push(user);
       await likedPost.save();
-      return res.status(200).json({ status: "Liked", likedPost: likedPost });
-    } else {
-      await likedPost.quantity--;
-      await likedPost.save();
-      return res.status(200).json({ status: "Unliked", likedPost: likedPost });
-    }
+      return res.status(200).json({ status: 'Liked', likedPost: likedPost });
+    } else likedPost.quantity--;
+    likedPost.likedUsers.pop();
+    await likedPost.save();
+    return res.status(200).json({ status: 'Unliked', likedPost: likedPost });
   } else {
-    return res.status(400).json({ status: "Post or user not found" });
+    return res.status(400).json({ status: 'Post or user not found' });
   }
 };
 

@@ -1,11 +1,11 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 
 export const authenticateToken = (req, res, next) => {
   // TODO middleware to return back user id too
 
-  const authHeader = req.headers["authorization"];
+  const authHeader = req.headers['authorization'];
 
-  const token = authHeader && authHeader.split(" ")[1];
+  const token = authHeader && authHeader.split(' ')[1];
 
   if (token == null) return res.sendStatus(401);
 

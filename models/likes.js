@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import User from "../models/user.js";
+import mongoose from 'mongoose';
+import User from '../models/user.js';
 
 const likes = mongoose.Schema({
   postId: {
@@ -14,6 +14,6 @@ const likes = mongoose.Schema({
   likedUsers: [User.schema],
 });
 
-const Likes = mongoose.model("Likes", likes);
+const Likes = mongoose.model('Likes', likes);
 
 export default Likes;

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const post = mongoose.Schema({
   title: {
@@ -18,6 +18,6 @@ const post = mongoose.Schema({
   },
 });
 
-const Post = mongoose.model("Post", post);
+const Post = mongoose.model('Post', post);
 
 export default Post;

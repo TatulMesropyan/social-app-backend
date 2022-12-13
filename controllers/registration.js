@@ -1,8 +1,8 @@
-import express from "express";
-import bcrypt from "bcrypt";
-import dotenv from "dotenv";
+import express from 'express';
+import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
 
-import User from "../models/user.js";
+import User from '../models/user.js';
 
 const router = express.Router();
 dotenv.config();
@@ -11,7 +11,7 @@ export const getUser = async (req, res) => {
   try {
     const postMessages = await User.find();
 
-    res.json({ status: "OK" });
+    res.json({ status: 'OK' });
   } catch (error) {
     res.status(404).json({ status: error.message });
   }
@@ -20,18 +20,18 @@ export const getUser = async (req, res) => {
 export const createUser = async (req, res) => {
   const { username, email, phone, password, confirmPassword } = req.body;
   if (!(password && email && phone && username)) {
-    return res.status(402).json({ status: "Data not formatted properly" });
+    return res.status(402).json({ status: 'Data not formatted properly' });
   }
 
   if (password !== confirmPassword) {
-    return res.status(400).json({ status: "Passwords did not match" });
+    return res.status(400).json({ status: 'Passwords did not match' });
   }
 
   const userExists = await User.findOne({
     $or: [{ username }, { email }, { phone }],
   });
   if (userExists) {
-    return res.status(423).json({ status: "Credentials already in use" });
+    return res.status(423).json({ status: 'Credentials already in use' });
   }
 
   try {
@@ -47,7 +47,7 @@ export const createUser = async (req, res) => {
     newUser.password = await bcrypt.hash(password, salt);
 
     await newUser.save();
-    res.status(200).json({ status: "User created" });
+    res.status(200).json({ status: 'User created' });
   } catch (error) {
     return res.status(409).json({ status: error.message });
   }
